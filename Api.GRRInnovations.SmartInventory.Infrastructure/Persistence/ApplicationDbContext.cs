@@ -14,6 +14,8 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
     {
         DbSet<ProductModel> Products {  get; set; }
         DbSet<CategoryModel> Categories { get; set; }
+        DbSet<StockEntryModel> StockEntries { get; set; }
+        DbSet<StockOutputModel> StockOutputs { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -25,10 +27,27 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
 
             DefaultModelSetup<ProductModel>(modelBuilder);
             modelBuilder.Entity<ProductModel>().Ignore(m => m.Category);
+            modelBuilder.Entity<ProductModel>().Ignore(m => m.StockEntries);
+            modelBuilder.Entity<ProductModel>().Ignore(m => m.StockOutputs);
+            modelBuilder.Entity<ProductModel>().Ignore(m => m.Supplier);
+            modelBuilder.Entity<ProductModel>().HasMany(m => m.DbStockEntries).WithOne(m => m.DbProduct).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<ProductModel>().HasMany(m => m.DbStockOutputs).WithOne(m => m.DbProduct).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
 
             DefaultModelSetup<CategoryModel>(modelBuilder);
             modelBuilder.Entity<CategoryModel>().Ignore(m => m.Products);
             modelBuilder.Entity<CategoryModel>().HasMany(m => m.DbProducts).WithOne(m => m.DbCategory).HasForeignKey(p => p.CategoryUid).OnDelete(DeleteBehavior.NoAction);
+
+            DefaultModelSetup<StockEntryModel>(modelBuilder);
+            modelBuilder.Entity<StockEntryModel>().Ignore(m => m.Product);
+            modelBuilder.Entity<StockEntryModel>().HasOne(m => m.DbProduct).WithMany(m => m.DbStockEntries).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
+
+            DefaultModelSetup<StockOutputModel>(modelBuilder);
+            modelBuilder.Entity<StockOutputModel>().Ignore(m => m.Product);
+            modelBuilder.Entity<StockOutputModel>().HasOne(m => m.DbProduct).WithMany(m => m.DbStockOutputs).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
+
+            DefaultModelSetup<SupplierModel>(modelBuilder);
+            modelBuilder.Entity<SupplierModel>().Ignore(m => m.Products);
+            modelBuilder.Entity<SupplierModel>().HasMany(m => m.DbProducts).WithOne(m => m.DbSupplier).HasForeignKey(p => p.SupplierUid).OnDelete(DeleteBehavior.NoAction);
         }
 
         public override int SaveChanges()

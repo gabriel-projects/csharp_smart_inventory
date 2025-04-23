@@ -12,5 +12,8 @@ namespace Api.GRRInnovations.SmartInventory.Interfaces.Entities
         public int StockQuantity { get; set; }
         public decimal UnitPrice { get; set; }
         public ICategoryModel Category { get; set; }
+        public ISupplierModel Supplier { get; set; }
+        public List<IStockEntryModel> StockEntries { get; set; }
+        public List<IStockOutputModel> StockOutputs { get; set; }
     }
 }
