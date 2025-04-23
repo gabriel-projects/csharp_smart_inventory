@@ -1,4 +1,7 @@
-﻿namespace Api.GRRInnovations.SmartInventory
+﻿using Api.GRRInnovations.SmartInventory.Application;
+using Api.GRRInnovations.SmartInventory.Infrastructure;
+
+namespace Api.GRRInnovations.SmartInventory
 {
     public class Startup
     {
@@ -13,6 +16,9 @@
         {
             services.AddControllers();
             services.AddSwaggerGen();
+
+            services.AddInfrastructure(_configuration);
+            services.AddApplication();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
