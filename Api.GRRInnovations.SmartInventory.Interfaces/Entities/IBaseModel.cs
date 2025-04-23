@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Api.GRRInnovations.SmartInventory.Interfaces.Entities
+﻿namespace Api.GRRInnovations.SmartInventory.Interfaces.Entities
 {
     public interface IBaseModel
     {

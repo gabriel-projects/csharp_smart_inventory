@@ -12,5 +12,13 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
         public string Name { get; set; }
         public int StockQuantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public CategoryModel? DbCategory { get; set; }
+        public ICategoryModel? Category
+        {
+            get => DbCategory;
+            set => DbCategory = value as CategoryModel;
+        }
+
+        public Guid? CategoryUid { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
     public class ApplicationDbContext : DbContext
     {
         DbSet<ProductModel> Products {  get; set; }
+        DbSet<CategoryModel> Categories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -23,6 +24,11 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
             base.OnModelCreating(modelBuilder);
 
             DefaultModelSetup<ProductModel>(modelBuilder);
+            modelBuilder.Entity<ProductModel>().Ignore(m => m.Category);
+
+            DefaultModelSetup<CategoryModel>(modelBuilder);
+            modelBuilder.Entity<CategoryModel>().Ignore(m => m.Products);
+            modelBuilder.Entity<CategoryModel>().HasMany(m => m.DbProducts).WithOne(m => m.DbCategory).HasForeignKey(p => p.CategoryUid).OnDelete(DeleteBehavior.NoAction);
         }
 
         public override int SaveChanges()
