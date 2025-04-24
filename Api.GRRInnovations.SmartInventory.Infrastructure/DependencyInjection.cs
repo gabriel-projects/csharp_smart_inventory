@@ -1,5 +1,7 @@
 ﻿using Api.GRRInnovations.SmartInventory.Infrastructure.Helpers;
 using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence;
+using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositories;
+using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,8 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure
         {
             var connection = ConnectionHelper.GetConnectionString(configuration);
             services.AddDbContextPool<ApplicationDbContext>(options => ConfigureDatabase(options, connection));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }

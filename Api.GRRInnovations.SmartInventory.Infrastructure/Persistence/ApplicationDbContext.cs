@@ -12,10 +12,11 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
 {
     public class ApplicationDbContext : DbContext
     {
-        DbSet<ProductModel> Products {  get; set; }
-        DbSet<CategoryModel> Categories { get; set; }
-        DbSet<StockEntryModel> StockEntries { get; set; }
-        DbSet<StockOutputModel> StockOutputs { get; set; }
+        public DbSet<ProductModel> Products {  get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
+        public DbSet<StockEntryModel> StockEntries { get; set; }
+        public DbSet<StockOutputModel> StockOutputs { get; set; }
+        public DbSet<SupplierModel> Suppliers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

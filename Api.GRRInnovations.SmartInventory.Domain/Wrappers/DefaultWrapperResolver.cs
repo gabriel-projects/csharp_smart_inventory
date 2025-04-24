@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
+using Api.GRRInnovations.SmartInventory.Domain.Wrappers.Out;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace Api.GRRInnovations.SmartInventory.Domain.Wrappers
@@ -9,10 +11,10 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Wrappers
         {
             var result = base.CreateContract(type);
 
-            //if (type == typeof(WrapperOutTask))
-            //{
-            //    result.DefaultCreator = () => new WrapperOutTask(new TaskModel());
-            //}
+            if (type == typeof(WrapperOutProduct))
+            {
+                result.DefaultCreator = () => new WrapperOutProduct(new ProductModel());
+            }
 
             return result;
         }
