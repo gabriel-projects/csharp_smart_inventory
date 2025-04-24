@@ -1,6 +1,8 @@
 ﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
 using Api.GRRInnovations.SmartInventory.Domain.Wrappers.In;
 using Api.GRRInnovations.SmartInventory.Domain.Wrappers.Out;
+using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
+using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
 using Api.GRRInnovations.SmartInventory.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,14 +33,30 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
         public async Task<IActionResult> GetAll(
             [FromQuery] string? name,
             [FromQuery] Guid? categoryId,
-            [FromQuery] Guid? supplierId)
+            [FromQuery] Guid? supplierId,
+            [FromQuery] EOrderByType orderBy = EOrderByType.Name,
+            [FromQuery] EOrderByDirection orderDirection = EOrderByDirection.Ascending,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var products = await _productService.GetAllAsync(new Interfaces.Repositories.ProductOptions
-            {
-                FilterCategoriesUids = categoryId is not null ? new List<Guid> { categoryId.Value } : null,
-                FilterNames = name is not null ? new List<string> { name } : null,
-                FilterSupplierUids = supplierId is not null ? new List<Guid> { supplierId.Value } : null
-            });
+            var options = new ProductOptionsPagination();
+
+            if (name != null)
+                options.FilterNames = new List<string> { name };
+
+            if (categoryId != null)
+                options.FilterCategoriesUids = new List<Guid> { categoryId.Value };
+
+            if (supplierId != null)
+                options.FilterSupplierUids = new List<Guid> { supplierId.Value };
+
+            options.OrderBy = orderBy;
+            options.OrderDirection = orderDirection;
+
+            options.Page = page;
+            options.PageSize = pageSize;
+
+            var products = await _productService.GetAllAsync(options);
 
             var response = await WrapperOutProduct.From(products).ConfigureAwait(false);
             return new OkObjectResult(response);
@@ -52,5 +70,8 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
             var response = await WrapperOutProduct.From(product).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
+
+
+        //todo: criar endpoint com search usando like para buscar pelo nome do produto
     }
 }

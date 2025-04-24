@@ -5,7 +5,7 @@ namespace Api.GRRInnovations.SmartInventory.Interfaces.Services
 {
     public interface IProductService
     {
-        Task<List<IProductModel>> GetAllAsync(ProductOptions productOptions);
+        Task<List<IProductModel>> GetAllAsync(ProductOptionsPagination productOptions);
         Task<IProductModel> GetByIdAsync(Guid id);
         Task<IProductModel> CreateAsync(IProductModel dto);
     }

@@ -23,9 +23,9 @@ namespace Api.GRRInnovations.SmartInventory.Application.Services
             return await _productRepository.CreateAsync(dto);
         }
 
-        public Task<List<IProductModel>> GetAllAsync(ProductOptions productOptions)
+        public async Task<List<IProductModel>> GetAllAsync(ProductOptionsPagination productOptions)
         {
-            throw new NotImplementedException();
+             return await _productRepository.GetAllAsync(productOptions);
         }
 
         public Task<IProductModel> GetByIdAsync(Guid id)

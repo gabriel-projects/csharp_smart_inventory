@@ -24,7 +24,7 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
             return productM;
         }
 
-        public async Task<IEnumerable<IProductModel>> GetAllAsync(ProductOptions productOptions)
+        public async Task<List<IProductModel>> GetAllAsync(ProductOptionsPagination productOptions)
         {
             return await Query(productOptions).ToListAsync<IProductModel>();
         }
@@ -34,14 +34,25 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
             return await Context.Products.FirstOrDefaultAsync(x => x.Uid == id);
         }
 
-        private IQueryable<ProductModel> Query(ProductOptions options)
+        private IQueryable<ProductModel> Query(ProductOptionsPagination options)
         {
             var query = Context.Products.AsQueryable();
 
             if (options.FilterNames != null) query = query.Where(p => options.FilterNames.Contains(p.Name));
 
-            return query;
-        }
+            query = options.OrderBy switch
+            {
+                EOrderByType.UnitPrice => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.UnitPrice) : query.OrderBy(p => p.UnitPrice),
+                EOrderByType.StockQuantity => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.StockQuantity) : query.OrderBy(p => p.StockQuantity),
+                EOrderByType.Name => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name)
+            };
 
+            var skip = (options.Page - 1) * options.PageSize;
+            var paged = query
+                .Skip(skip)
+                .Take(options.PageSize);
+
+            return paged;
+        }
     }
 }
