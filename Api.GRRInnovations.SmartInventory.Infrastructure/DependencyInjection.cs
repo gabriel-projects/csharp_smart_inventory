@@ -22,6 +22,7 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure
             services.AddDbContextPool<ApplicationDbContext>(options => ConfigureDatabase(options, connection));
 
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             return services;
         }
