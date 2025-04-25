@@ -56,8 +56,11 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
             options.Page = page;
             options.PageSize = pageSize;
 
+            options.AsNoTracking = true;
+
             var products = await _productService.GetAllAsync(options);
 
+            //todo: mudar para pagination result
             var response = await WrapperOutProduct.From(products).ConfigureAwait(false);
             return new OkObjectResult(response);
         }

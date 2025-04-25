@@ -38,13 +38,15 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
         {
             var query = Context.Products.AsQueryable();
 
+            if (options.AsNoTracking) query = query.AsNoTracking();
+
             if (options.FilterNames != null) query = query.Where(p => options.FilterNames.Contains(p.Name));
 
             query = options.OrderBy switch
             {
                 EOrderByType.UnitPrice => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.UnitPrice) : query.OrderBy(p => p.UnitPrice),
                 EOrderByType.StockQuantity => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.StockQuantity) : query.OrderBy(p => p.StockQuantity),
-                EOrderByType.Name => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name)
+                _ => options.OrderDirection == EOrderByDirection.Descending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name)
             };
 
             var skip = (options.Page - 1) * options.PageSize;

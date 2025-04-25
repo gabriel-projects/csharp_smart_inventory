@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.GRRInnovations.SmartInv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.GRRInnovations.SmartInventory.Infrastructure", "Api.GRRInnovations.SmartInventory.Infrastructure\Api.GRRInnovations.SmartInventory.Infrastructure.csproj", "{E5FDBC61-918B-46FB-AC06-8884E653345A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.GRRInnovations.SmartInventory.Benchmarks", "tests\Api.GRRInnovations.SmartInventory.Benchmarks\Api.GRRInnovations.SmartInventory.Benchmarks.csproj", "{3D5895F7-7B15-4A34-A427-CE78E627BC06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E5FDBC61-918B-46FB-AC06-8884E653345A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5FDBC61-918B-46FB-AC06-8884E653345A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5FDBC61-918B-46FB-AC06-8884E653345A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D5895F7-7B15-4A34-A427-CE78E627BC06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D5895F7-7B15-4A34-A427-CE78E627BC06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D5895F7-7B15-4A34-A427-CE78E627BC06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D5895F7-7B15-4A34-A427-CE78E627BC06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

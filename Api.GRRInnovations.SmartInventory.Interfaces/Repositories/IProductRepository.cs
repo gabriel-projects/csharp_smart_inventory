@@ -17,6 +17,7 @@ namespace Api.GRRInnovations.SmartInventory.Interfaces.Repositories
         public List<Guid> FilterSupplierUids { get; set; }
         public bool IncludeCategory { get; set; }
         public bool IncludeSupplier { get; set; }
+        public bool AsNoTracking { get; set; }
     }
 
     public class ProductOptionsPagination : ProductOptionsBase

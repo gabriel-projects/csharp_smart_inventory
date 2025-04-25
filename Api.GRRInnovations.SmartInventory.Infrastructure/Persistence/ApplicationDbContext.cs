@@ -31,23 +31,35 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
             modelBuilder.Entity<ProductModel>().Ignore(m => m.StockEntries);
             modelBuilder.Entity<ProductModel>().Ignore(m => m.StockOutputs);
             modelBuilder.Entity<ProductModel>().Ignore(m => m.Supplier);
+            modelBuilder.Entity<ProductModel>().Property(m => m.UnitPrice).HasPrecision(20, 2);
             modelBuilder.Entity<ProductModel>().HasMany(m => m.DbStockEntries).WithOne(m => m.DbProduct).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<ProductModel>().HasMany(m => m.DbStockOutputs).WithOne(m => m.DbProduct).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<ProductModel>().HasIndex(p => p.Name);
+            modelBuilder.Entity<ProductModel>().HasIndex(p => p.CategoryUid);
+            modelBuilder.Entity<ProductModel>().HasIndex(p => p.SupplierUid);
+            modelBuilder.Entity<ProductModel>().HasIndex(p => p.CreatedAt);
+            modelBuilder.Entity<ProductModel>().HasIndex(p => new { p.Name, p.CategoryUid });
 
             DefaultModelSetup<CategoryModel>(modelBuilder);
             modelBuilder.Entity<CategoryModel>().Ignore(m => m.Products);
+            modelBuilder.Entity<CategoryModel>().HasIndex(p => p.Name);
             modelBuilder.Entity<CategoryModel>().HasMany(m => m.DbProducts).WithOne(m => m.DbCategory).HasForeignKey(p => p.CategoryUid).OnDelete(DeleteBehavior.NoAction);
 
             DefaultModelSetup<StockEntryModel>(modelBuilder);
             modelBuilder.Entity<StockEntryModel>().Ignore(m => m.Product);
+            modelBuilder.Entity<StockEntryModel>().HasIndex(p => p.ProductUid);
+            modelBuilder.Entity<StockEntryModel>().HasIndex(p => p.EntryDate);
             modelBuilder.Entity<StockEntryModel>().HasOne(m => m.DbProduct).WithMany(m => m.DbStockEntries).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
 
             DefaultModelSetup<StockOutputModel>(modelBuilder);
             modelBuilder.Entity<StockOutputModel>().Ignore(m => m.Product);
+            modelBuilder.Entity<StockOutputModel>().HasIndex(p => p.ProductUid);
+            modelBuilder.Entity<StockOutputModel>().HasIndex(p => p.OutputDate);
             modelBuilder.Entity<StockOutputModel>().HasOne(m => m.DbProduct).WithMany(m => m.DbStockOutputs).HasForeignKey(p => p.ProductUid).OnDelete(DeleteBehavior.NoAction);
 
             DefaultModelSetup<SupplierModel>(modelBuilder);
             modelBuilder.Entity<SupplierModel>().Ignore(m => m.Products);
+            modelBuilder.Entity<SupplierModel>().HasIndex(p => p.Name);
             modelBuilder.Entity<SupplierModel>().HasMany(m => m.DbProducts).WithOne(m => m.DbSupplier).HasForeignKey(p => p.SupplierUid).OnDelete(DeleteBehavior.NoAction);
         }
 
