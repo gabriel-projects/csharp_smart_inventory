@@ -7,7 +7,7 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
         public Guid ProductId { get; set; }
         public DateTime OutputDate { get; set; }
         public int Quantity { get; set; }
-        public ProductModel? DbProduct { get; set; }
+        public virtual ProductModel? DbProduct { get; set; }
         public IProductModel? Product
         {
             get => DbProduct;

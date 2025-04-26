@@ -11,7 +11,7 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public List<ProductModel>? DbProducts { get; set; }
+        public virtual List<ProductModel>? DbProducts { get; set; }
 
         public List<IProductModel>? Products
         {

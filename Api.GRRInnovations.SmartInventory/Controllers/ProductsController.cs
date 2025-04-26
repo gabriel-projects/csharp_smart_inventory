@@ -5,6 +5,7 @@ using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
 using Api.GRRInnovations.SmartInventory.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Api.GRRInnovations.SmartInventory.Controllers
 {
@@ -13,16 +14,29 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] WrapperInProduct<ProductModel> dto)
         {
             var wrapperIn = await dto.Result();
+
+            if (dto.SupplierUid != null)
+            {
+            }
+
+            if (dto.CategoryUid != null)
+            {
+                var category = await _categoryService.GetByIdAsync(dto.CategoryUid);
+                wrapperIn.Category = category;
+            }
+
             var model = await _productService.CreateAsync(wrapperIn);
 
             var response = await WrapperOutProduct.From(model).ConfigureAwait(false);
@@ -65,6 +79,24 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
             return new OkObjectResult(response);
         }
 
+        [HttpGet(nameof(GetAllTestLazyLoading))]
+        public async Task<IActionResult> GetAllTestLazyLoading()
+        {
+            var products = await _productService.GetAllAsync(new ProductOptionsPagination()
+            {
+                PageSize = 9999
+            });
+
+            foreach (var product in products)
+            {
+                //select * from category for each product
+                Console.WriteLine($"Category: {product.Category?.Name}");
+            }
+
+            var response = await WrapperOutProduct.From(products).ConfigureAwait(false);
+            return new OkObjectResult(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -73,7 +105,6 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
             var response = await WrapperOutProduct.From(product).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
-
 
         //todo: criar endpoint com search usando like para buscar pelo nome do produto
     }

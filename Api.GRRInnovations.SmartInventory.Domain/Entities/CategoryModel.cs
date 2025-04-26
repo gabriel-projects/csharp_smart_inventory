@@ -1,4 +1,6 @@
 ﻿using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Reflection.Metadata;
 
 namespace Api.GRRInnovations.SmartInventory.Domain.Entities
 {
@@ -6,7 +8,12 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
     {
         public string Name { get; set; }
 
-        public List<ProductModel>? DbProducts { get; set; }
+        private List<ProductModel> _dbProducts;
+        public List<ProductModel>? DbProducts
+        {
+            get => LazyLoader.Load(this, ref _dbProducts);
+            set => _dbProducts = value;
+        }
 
         public List<IProductModel>? Products
         {
@@ -14,9 +21,16 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
             set => DbProducts = value?.Cast<ProductModel>()?.ToList();
         }
 
+        private ILazyLoader LazyLoader { get; set; }
+
+        private CategoryModel(ILazyLoader lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
+
         public CategoryModel()
         {
-            DbProducts = [];
+            DbProducts = new List<ProductModel>();
         }
     }
 }

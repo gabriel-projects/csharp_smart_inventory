@@ -29,7 +29,8 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure
 
         private static void ConfigureDatabase(DbContextOptionsBuilder options, string connection)
         {
-            options.UseSqlServer(connection, sqlOptions =>
+            options
+            .UseSqlServer(connection, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
                     maxRetryCount: 5,
@@ -39,6 +40,8 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure
 
                 sqlOptions.CommandTimeout(60);
             });
+            
+            //.UseLazyLoadingProxies();
 
 #if DEBUG
             options.LogTo(Console.WriteLine, LogLevel.Information)

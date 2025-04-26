@@ -1,6 +1,7 @@
 ﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositories
 {
@@ -23,19 +24,25 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
             return categoryM;
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _context.Categories.FindAsync(id);
+            if (category is null) throw new KeyNotFoundException("Category not found");
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<ICategoryModel>> GetAllAsync()
+        public async Task<List<ICategoryModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Categories.ToListAsync<ICategoryModel>();
         }
 
-        public Task<ICategoryModel> GetByIdAsync(Guid id)
+        public async Task<ICategoryModel?> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context
+                .Categories
+                .FirstOrDefaultAsync(x => x.Uid == id);
         }
 
         public Task UpdateAsync(Guid id, ICategoryModel dto)

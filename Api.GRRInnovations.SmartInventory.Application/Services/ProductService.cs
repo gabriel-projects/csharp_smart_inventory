@@ -1,4 +1,5 @@
-﻿using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
+﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
+using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
 using Api.GRRInnovations.SmartInventory.Interfaces.Services;
 using System;

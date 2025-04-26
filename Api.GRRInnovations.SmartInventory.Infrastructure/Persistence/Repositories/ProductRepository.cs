@@ -7,19 +7,24 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly ApplicationDbContext Context;
+        private readonly ApplicationDbContext _context;
 
         public ProductRepository(ApplicationDbContext applicationDbContext)
         {
-            this.Context = applicationDbContext;
+            this._context = applicationDbContext;
         }
 
         public async Task<IProductModel> CreateAsync(IProductModel dto)
         {
             if (dto is not ProductModel productM) return null;
 
-            await Context.Products.AddAsync(productM).ConfigureAwait(false);
-            await Context.SaveChangesAsync().ConfigureAwait(false);
+            foreach (var entry in _context.ChangeTracker.Entries())
+            {
+                Console.WriteLine($"Entity Name: {entry.Entity.GetType().Name} - State: {entry.State}");
+            }
+
+            await _context.Products.AddAsync(productM).ConfigureAwait(false);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return productM;
         }
@@ -31,12 +36,12 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
 
         public async Task<IProductModel> GetByIdAsync(Guid id)
         {
-            return await Context.Products.FirstOrDefaultAsync(x => x.Uid == id);
+            return await _context.Products.FirstOrDefaultAsync(x => x.Uid == id);
         }
 
         private IQueryable<ProductModel> Query(ProductOptionsPagination options)
         {
-            var query = Context.Products.AsQueryable();
+            var query = _context.Products.AsQueryable();
 
             if (options.AsNoTracking) query = query.AsNoTracking();
 

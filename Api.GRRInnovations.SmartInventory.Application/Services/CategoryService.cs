@@ -23,14 +23,14 @@ namespace Api.GRRInnovations.SmartInventory.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<ICategoryModel>> GetAllAsync()
+        public async Task<List<ICategoryModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _categoryRepository.GetAllAsync();
         }
 
-        public Task<ICategoryModel> GetByIdAsync(Guid id)
+        public async Task<ICategoryModel> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _categoryRepository.GetByIdAsync(id);
         }
 
         public Task UpdateAsync(Guid id, ICategoryModel dto)
