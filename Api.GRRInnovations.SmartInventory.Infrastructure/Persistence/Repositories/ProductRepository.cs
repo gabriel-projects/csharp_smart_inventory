@@ -1,6 +1,8 @@
 ﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Entities;
 using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
+using EFCore.BulkExtensions;
+using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositories
@@ -29,6 +31,19 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
             return productM;
         }
 
+        public async Task<List<IProductModel>> BulkInsertProductsAsync(List<IProductModel> dtos)
+        {
+            //todo: resolver o bug
+            await _context.BulkInsertAsync(dtos, new BulkConfig
+            {
+                SqlBulkCopyOptions =  Microsoft.Data.SqlClient.SqlBulkCopyOptions.Default,
+                BulkCopyTimeout = 200
+            });
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return dtos;
+        }
+
         public async Task<List<IProductModel>> GetAllAsync(ProductOptionsPagination productOptions)
         {
             return await Query(productOptions).ToListAsync<IProductModel>();
@@ -53,6 +68,8 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
         private IQueryable<ProductModel> Query(ProductOptionsPagination options)
         {
             var query = _context.Products.AsQueryable();
+
+            query.Cacheable();
 
             if (options.AsNoTracking) query = query.AsNoTracking();
 

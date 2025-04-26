@@ -9,5 +9,6 @@ namespace Api.GRRInnovations.SmartInventory.Interfaces.Services
         Task<List<IProductModel>> GetAllSplitQueryAsync(ProductOptionsPagination productOptions);
         Task<IProductModel> GetByIdAsync(Guid id);
         Task<IProductModel> CreateAsync(IProductModel dto);
+        Task<List<IProductModel>> BulkInsertProductsAsync(List<IProductModel> dtos);
     }
 }
