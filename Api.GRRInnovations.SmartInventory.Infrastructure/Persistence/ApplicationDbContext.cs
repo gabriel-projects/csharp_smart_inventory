@@ -1,12 +1,7 @@
 ﻿using Api.GRRInnovations.SmartInventory.Domain.Entities;
+using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
 {
@@ -18,8 +13,11 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
         public DbSet<StockOutputModel> StockOutputs { get; set; }
         public DbSet<SupplierModel> Suppliers { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        private readonly AuditInterceptor _auditInterceptor;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, AuditInterceptor auditInterceptor) : base(options)
         {
+            _auditInterceptor = auditInterceptor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

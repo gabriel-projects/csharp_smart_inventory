@@ -29,6 +29,11 @@ namespace Api.GRRInnovations.SmartInventory.Application.Services
              return await _productRepository.GetAllAsync(productOptions);
         }
 
+        public async Task<List<IProductModel>> GetAllSplitQueryAsync(ProductOptionsPagination productOptions)
+        {
+            return await _productRepository.GetAllSplitQueryAsync(productOptions);
+        }
+
         public Task<IProductModel> GetByIdAsync(Guid id)
         {
             throw new NotImplementedException();

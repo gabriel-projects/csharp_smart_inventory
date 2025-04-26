@@ -34,6 +34,17 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositor
             return await Query(productOptions).ToListAsync<IProductModel>();
         }
 
+        public async Task<List<IProductModel>> GetAllSplitQueryAsync(ProductOptionsPagination productOptions)
+        {
+            var products = _context.Products
+                    .AsSplitQuery()
+                    .Include(p => p.DbCategory)
+                    .Include(p => p.DbStockEntries)
+                    .Include(p => p.DbStockOutputs);
+
+            return await products.ToListAsync<IProductModel>();
+        }
+
         public async Task<IProductModel> GetByIdAsync(Guid id)
         {
             return await _context.Products.FirstOrDefaultAsync(x => x.Uid == id);

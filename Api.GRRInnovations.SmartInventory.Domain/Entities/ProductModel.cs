@@ -9,12 +9,26 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
         public int StockQuantity { get; set; }
         public decimal UnitPrice { get; set; }
 
-        private CategoryModel _dbCategory;
-        public CategoryModel DbCategory
+        public CategoryModel? _dbCategory;
+        public CategoryModel? DbCategory
         {
-            get => LazyLoader.Load(this, ref _dbCategory);
-            set => _dbCategory = value;
+            get
+            {
+                if (LazyLoader != null)
+                {
+                    return LazyLoader.Load(this, ref _dbCategory);
+                }
+
+                return _dbCategory;
+            }
+            set 
+            {
+                _dbCategory = value;
+            }
         }
+
+        //public CategoryModel? DbCategory { get; set; }
+
         public ICategoryModel? Category
         {
             get => DbCategory;
@@ -49,7 +63,7 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
 
         private ILazyLoader LazyLoader { get; set; }
 
-        private ProductModel(ILazyLoader lazyLoader)
+        public ProductModel(ILazyLoader lazyLoader)
         {
             LazyLoader = lazyLoader;
         }

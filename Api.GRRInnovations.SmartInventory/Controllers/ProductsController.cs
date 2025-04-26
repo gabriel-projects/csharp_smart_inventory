@@ -97,6 +97,24 @@ namespace Api.GRRInnovations.SmartInventory.Controllers
             return new OkObjectResult(response);
         }
 
+        [HttpGet(nameof(GetAllTestSplitQuery))]
+        public async Task<IActionResult> GetAllTestSplitQuery()
+        {
+            var products = await _productService.GetAllSplitQueryAsync(new ProductOptionsPagination()
+            {
+                PageSize = 9999
+            });
+
+            foreach (var product in products)
+            {
+                //select * from category for each product
+                Console.WriteLine($"Category: {product.Category?.Name}");
+            }
+
+            var response = await WrapperOutProduct.From(products).ConfigureAwait(false);
+            return new OkObjectResult(response);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {

@@ -8,7 +8,7 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
     {
         public string Name { get; set; }
 
-        private List<ProductModel> _dbProducts;
+        public List<ProductModel> _dbProducts;
         public List<ProductModel>? DbProducts
         {
             get => LazyLoader.Load(this, ref _dbProducts);
@@ -23,7 +23,7 @@ namespace Api.GRRInnovations.SmartInventory.Domain.Entities
 
         private ILazyLoader LazyLoader { get; set; }
 
-        private CategoryModel(ILazyLoader lazyLoader)
+        public CategoryModel(ILazyLoader lazyLoader)
         {
             LazyLoader = lazyLoader;
         }

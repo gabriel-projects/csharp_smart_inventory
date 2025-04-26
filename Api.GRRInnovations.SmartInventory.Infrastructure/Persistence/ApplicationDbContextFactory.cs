@@ -1,4 +1,5 @@
 ﻿using Api.GRRInnovations.SmartInventory.Infrastructure.Helpers;
+using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,9 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure.Persistence
             builder.EnableSensitiveDataLogging(true);
 #endif
 
-            return new ApplicationDbContext(builder.Options);
+            var auditInterceptor = new AuditInterceptor();
+
+            return new ApplicationDbContext(builder.Options, auditInterceptor);
         }
 
         internal static string? ConnectionString()

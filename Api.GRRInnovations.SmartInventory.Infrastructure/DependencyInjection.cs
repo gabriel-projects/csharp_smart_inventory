@@ -1,5 +1,6 @@
 ﻿using Api.GRRInnovations.SmartInventory.Infrastructure.Helpers;
 using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence;
+using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Interceptors;
 using Api.GRRInnovations.SmartInventory.Infrastructure.Persistence.Repositories;
 using Api.GRRInnovations.SmartInventory.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,19 @@ namespace Api.GRRInnovations.SmartInventory.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             var connection = ConnectionHelper.GetConnectionString(configuration);
-            services.AddDbContextPool<ApplicationDbContext>(options => ConfigureDatabase(options, connection));
+            services.AddDbContextPool<ApplicationDbContext>((serviceProvider, options) =>
+            {
+                ConfigureDatabase(options, connection);
+
+                var audit = serviceProvider.GetRequiredService<AuditInterceptor>();
+
+                options.AddInterceptors(audit);
+            });
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            services.AddSingleton<AuditInterceptor>();
 
             return services;
         }
